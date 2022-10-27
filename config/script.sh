@@ -1,0 +1,1 @@
+echo ERROR: Oi, ya need to update the script, dummy!
