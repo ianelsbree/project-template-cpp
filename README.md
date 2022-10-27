@@ -2,6 +2,10 @@
 
 This folder contains a template structure for a moderate-complexity C project. The makefile is where the important stuff is. It's configured for automatic source file detection and dependency generation. There are some directories set up here, and you should probably keep them how they are unless you know how to properly modify the makefile.
 
+## Setup
+
+Extract the archive to a new project folder. Run `make setup` to create the necessary directories. Place your source files in the `src/` directory. Look at the makefile to see what needs to be edited there. Enjoy.
+
 ## Directories
 
 - config/

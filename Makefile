@@ -8,14 +8,18 @@
 #* generate dependencies as needed. Look through it to see how it works.
 #*##############################################################################
 
-#? Project name
-PROJNAME=sample
+#? Project name, e.g. My Project
+PROJECTNAME=
+
+PROJNAME=$(shell echo "$(PROJECTNAME)" | tr '[:upper:] ' '[:lower:]_')
 
 # Relevant directories
-VPATH=src target data doc
+VPATH=config data doc src target
 
 #? Executable name, e.g. target/executable
-BINARY= 
+BINARY=
+
+BINARY:=target/$(BINARY)
 
 # Relevant files
 SOURCES=$(wildcard src/*.c)
@@ -26,8 +30,6 @@ DEPENDS=$(patsubst src%,target%,$(patsubst %.c,%.d,$(SOURCES)))
 CC=gcc
 CSTD=c90
 OPT=0
-
-# Concatenate the flags
 CFLAGS=-g -O -Wextra -Werror -Wall -std=$(CSTD) -pedantic -O$(OPT) -MD -MP -Isrc
 
 #? Valgrind settings (optional)
@@ -47,8 +49,8 @@ clean:
 	rm -rf $(BINARY) $(OBJECTS) $(DEPENDS)
 
 # Documentation and exportation targets
-doc/refman.pdf: config/Doxyfile $(SOURCES)
-	(cat $< ; echo "PROJECT_NAME=$(PROJNAME)") | doxygen -
+doc/refman.pdf: config/Doxyfile $(SOURCES) Makefile
+	(cat $< ; echo "PROJECT_NAME=\"$(PROJECTNAME)\"") | doxygen -
 	(cd latex; make > /dev/null)
 	cp latex/refman.pdf doc/refman.pdf
 	rm -r latex
@@ -66,10 +68,13 @@ $(PROJNAME).zip: $(SOURCES) src/*.h doc/refman.pdf typescript
 
 # Testing targets
 test:
-	make clean
-	make $(BINARY)
+# todo:	make clean
+# todo:	make $(BINARY)
 # todo: $(BINARY) args | diff output.txt -
 # todo: $(VALGRIND) $(BINARY) 1>/dev/null
 
+setup:
+	mkdir data doc src target
+
 -include $(DEPENDS)
-.PHONY: test
+.PHONY: test setup
