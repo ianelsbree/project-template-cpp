@@ -33,7 +33,7 @@ OPT=0
 CFLAGS=-g -O -Wextra -Werror -Wall -std=$(CSTD) -pedantic -O$(OPT) -MD -MP -Isrc
 
 #? Valgrind settings (optional)
-VALGRIND=valgrind -q --leak-check=full --show-reachable=yes--tool=memcheck 
+VALGRIND=valgrind -q --leak-check=full --show-reachable=yes --tool=memcheck 
 
 all: $(BINARY)
 
