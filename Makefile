@@ -9,7 +9,10 @@
 #*##############################################################################
 
 #? Project name, e.g. My Project
-PROJECTNAME=Test Project
+PROJECTNAME=
+ifndef PROJECTNAME
+$(error PROJECTNAME is not defined)
+endif
 
 PROJNAME=$(shell echo "$(PROJECTNAME)" | tr '[:upper:] ' '[:lower:]_')
 
@@ -17,7 +20,10 @@ PROJNAME=$(shell echo "$(PROJECTNAME)" | tr '[:upper:] ' '[:lower:]_')
 VPATH=config data doc src target
 
 #? Executable name, e.g. target/executable
-BINARY=testing
+BINARY=
+ifndef BINARY
+$(error BINARY is not defined)
+endif
 
 BINARY:=target/$(BINARY)
 
