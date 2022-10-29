@@ -62,8 +62,9 @@ typescript: $(BINARY)
 	$(info $$ config/script.sh)
 	$(info $$ exit)
 	$(info -------------------------------------------------)
+	$(error ERROR: typescript needs to be made interactively)
 
-$(PROJNAME).zip: $(SOURCES) src/*.h doc/refman.pdf typescript
+$(PROJNAME).zip: $(SOURCES) $(wildcard src/*.h) doc/refman.pdf typescript
 	zip $(PROJNAME).zip -j $^
 
 # Testing targets
@@ -74,9 +75,9 @@ test:
 # todo: $(VALGRIND) $(BINARY) 1>/dev/null
 
 setup:
-ifeq ($(strip $(shell ls)), Makefile)
-	mkdir config data doc src target
-	(cd config; doxygen -g > /dev/null)
+ifeq ($(wildcard $(VPATH)),)
+	mkdir $(VPATH)
+	doxygen -g config/Doxyfile > /dev/null
 	echo "QUIET                  = YES" >> config/Doxyfile
 	echo "INPUT                  = src" >> config/Doxyfile
 	echo "GENERATE_HTML          = NO" >> config/Doxyfile
@@ -87,7 +88,8 @@ ifeq ($(strip $(shell ls)), Makefile)
 	chmod +x config/script.sh
 	@echo Project directory initialized.
 else
-	@echo Project structure already exists. To reinitialize, delete all files except the Makefile.
+	@echo Project structure already exists. To reinitialize,  delete all \
+	directories created during setup. 
 endif
 
 -include $(DEPENDS)
