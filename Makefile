@@ -2,14 +2,14 @@
 #* Automatic C Project Makefile
 #* By Ian Elsbree
 #* v2022.10.26
-#* 
+#*
 #* This makefile is set up to build a C project. The only configuration needed
 #* is marked by "#?" comments. It will automatically detect source files and
 #* generate dependencies as needed. Look through it to see how it works.
 #*##############################################################################
 
 #? Project name, e.g. My Project
-PROJECTNAME=
+PROJECTNAME=Test Project
 
 PROJNAME=$(shell echo "$(PROJECTNAME)" | tr '[:upper:] ' '[:lower:]_')
 
@@ -17,7 +17,7 @@ PROJNAME=$(shell echo "$(PROJECTNAME)" | tr '[:upper:] ' '[:lower:]_')
 VPATH=config data doc src target
 
 #? Executable name, e.g. target/executable
-BINARY=
+BINARY=testing
 
 BINARY:=target/$(BINARY)
 
@@ -33,7 +33,7 @@ OPT=0
 CFLAGS=-g -O -Wextra -Werror -Wall -std=$(CSTD) -pedantic -O$(OPT) -MD -MP -Isrc
 
 #? Valgrind settings (optional)
-VALGRIND=valgrind -q --leak-check=full --show-reachable=yes --tool=memcheck 
+VALGRIND=valgrind -q --leak-check=full --show-reachable=yes --tool=memcheck
 
 all: $(BINARY)
 
@@ -74,7 +74,21 @@ test:
 # todo: $(VALGRIND) $(BINARY) 1>/dev/null
 
 setup:
-	mkdir data doc src target
+ifeq ($(strip $(shell ls)), Makefile)
+	mkdir config data doc src target
+	(cd config; doxygen -g > /dev/null)
+	echo "QUIET                  = YES" >> config/Doxyfile
+	echo "INPUT                  = src" >> config/Doxyfile
+	echo "GENERATE_HTML          = NO" >> config/Doxyfile
+	echo "COMPACT_LATEX          = YES" >> config/Doxyfile
+	echo "PAPER_TYPE             = letter" >> config/Doxyfile
+	touch config/script.sh
+	echo "#!/usr/bin/bash" > config/script.sh
+	chmod +x config/script.sh
+	@echo Project directory initialized.
+else
+	@echo Project structure already exists. To reinitialize, delete all files except the Makefile.
+endif
 
 -include $(DEPENDS)
 .PHONY: test setup
