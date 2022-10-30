@@ -36,7 +36,7 @@ DEPENDS=$(patsubst src%,target%,$(patsubst %.c,%.d,$(SOURCES)))
 CC=gcc
 CSTD=c90
 OPT=0
-CFLAGS=-g -O -Wextra -Werror -Wall -std=$(CSTD) -pedantic -O$(OPT) -MD -MP -Isrc
+CFLAGS=-O$(OPT) -g -Wextra -Werror -Wall -std=$(CSTD) -pedantic -MD -MP -Isrc
 
 #? Valgrind settings (optional)
 VALGRIND=valgrind -q --leak-check=full --show-reachable=yes --tool=memcheck
@@ -55,7 +55,7 @@ clean:
 	rm -rf $(BINARY) $(OBJECTS) $(DEPENDS)
 
 # Documentation and exportation targets
-doc/refman.pdf: config/Doxyfile $(SOURCES) Makefile
+doc/refman.pdf: config/Doxyfile $(SOURCES) $(wildcard src/*.h) Makefile
 	(cat $< ; echo "PROJECT_NAME=\"$(PROJECTNAME)\"") | doxygen -
 	(cd latex; make > /dev/null)
 	cp latex/refman.pdf doc/refman.pdf
@@ -95,7 +95,7 @@ ifeq ($(wildcard $(VPATH)),)
 	@echo Project directory initialized.
 else
 	@echo Project structure already exists. To reinitialize,  delete all \
-	directories created during setup. 
+	directories created during setup.
 endif
 
 -include $(DEPENDS)
