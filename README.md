@@ -4,7 +4,7 @@ This folder contains a template structure for a moderate-complexity C project. T
 
 ## Setup
 
-Extract the archive to a new project folder. Run `make setup` to create the necessary directories. Place your source files in the `src/` directory. Look at the makefile to see what needs to be edited there. Enjoy.
+Download the makefile (named `Makefile`). Run `make setup` to create the necessary directories. Place your source files in the `src/` directory. Look at the makefile to see what needs to be edited there. Enjoy.
 
 ## Directories
 
