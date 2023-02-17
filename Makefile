@@ -1,9 +1,9 @@
 #*##############################################################################
-#* Automatic C Project Makefile
+#* Automatic C++ Project Makefile
 #* By Ian Elsbree
-#* v2022.10.26
+#* v2023.02.16
 #*
-#* This makefile is set up to build a C project. The only configuration needed
+#* This makefile is set up to build a C++ project. The only configuration needed
 #* is marked by "#?" comments. It will automatically detect source files and
 #* generate dependencies as needed. Look through it to see how it works.
 #*##############################################################################
@@ -28,20 +28,20 @@ endif
 BINARY:=target/$(BINARY)
 
 # Relevant files
-SOURCES=$(wildcard src/*.c)
-OBJECTS=$(patsubst src%,target%,$(patsubst %.c,%.o,$(SOURCES)))
-DEPENDS=$(patsubst src%,target%,$(patsubst %.c,%.d,$(SOURCES)))
+SOURCES=$(wildcard src/*.cpp)
+OBJECTS=$(patsubst src%,target%,$(patsubst %.cpp,%.o,$(SOURCES)))
+DEPENDS=$(patsubst src%,target%,$(patsubst %.cpp,%.d,$(SOURCES)))
 
 #? Compiler settings
-CC=gcc
-CSTD=c90
+CC=g++
+CSTD=c++11
 OPT=0
 CFLAGS=-O$(OPT) -g -Wextra -Werror -Wall -std=$(CSTD) -pedantic -MD -MP -Isrc
 
 #? Valgrind settings (optional)
 VALGRIND=valgrind -q --leak-check=full --show-reachable=yes --tool=memcheck
 
-all: $(BINARY)
+all: $(BINARY) doc/refman.pdf $(PROJNAME).zip
 
 # Build targets
 $(BINARY): $(OBJECTS)
@@ -70,7 +70,7 @@ typescript: $(BINARY)
 	$(info -------------------------------------------------)
 	$(error ERROR: typescript needs to be made interactively)
 
-$(PROJNAME).zip: $(SOURCES) $(wildcard src/*.h) doc/refman.pdf typescript
+$(PROJNAME).zip: $(SOURCES) $(wildcard src/*.h)
 	zip $(PROJNAME).zip -j $^
 
 # Testing targets
